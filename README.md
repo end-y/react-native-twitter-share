@@ -5,17 +5,13 @@ Twitter Share Button
 ## Installation
 
 ```sh
-npm install react-native-twitter-share
+
 ```
 
 ## Usage
 
 ```js
-import { multiply } from 'react-native-twitter-share';
 
-// ...
-
-const result = await multiply(3, 7);
 ```
 
 ## Contributing
