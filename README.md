@@ -5,7 +5,7 @@ Twitter Share Button
 ## Installation
 
 ```sh
-npm install react-native-twitter-share
+
 ```
 
 ## Usage
