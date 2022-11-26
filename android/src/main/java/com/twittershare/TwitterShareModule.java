@@ -1,7 +1,12 @@
 package com.twittershare;
 
-import androidx.annotation.NonNull;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 
+import androidx.annotation.NonNull;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -15,18 +20,31 @@ public class TwitterShareModule extends ReactContextBaseJavaModule {
   public TwitterShareModule(ReactApplicationContext reactContext) {
     super(reactContext);
   }
-
   @Override
   @NonNull
   public String getName() {
     return NAME;
   }
-
-
-  // Example method
-  // See https://reactnative.dev/docs/native-modules-android
   @ReactMethod
-  public void multiply(double a, double b, Promise promise) {
-    promise.resolve(a * b);
+  public void SendTweet(String msg, String uriStr, Promise promise) {
+    ReactApplicationContext context = getReactApplicationContext();
+    Intent intent = null;
+    try{
+      intent = new Intent();
+      intent.setAction(Intent.ACTION_SEND);
+      intent.putExtra(Intent.EXTRA_TEXT,msg);
+      intent.setType("text/plain");
+      if(uriStr.equals(false)){
+        intent.putExtra(Intent.EXTRA_STREAM,uriStr);
+        intent.setType("image/*");
+      }
+
+      intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+      intent.setPackage("com.twitter.android");
+      context.startActivity(intent);
+      promise.resolve(true);
+    }catch (Exception e){
+      promise.reject("Error: ",e);
+    }
   }
 }

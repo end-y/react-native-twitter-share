@@ -1,18 +1,25 @@
 import * as React from 'react';
 
-import { StyleSheet, View, Text } from 'react-native';
-import { multiply } from 'react-native-twitter-share';
+import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
+import ReactNativeTwitterShare from 'react-native-twitter-share';
 
 export default function App() {
-  const [result, setResult] = React.useState<number | undefined>();
-
-  React.useEffect(() => {
-    multiply(3, 7).then(setResult);
-  }, []);
+  function send(){
+    let t = new ReactNativeTwitterShare("Hello World",ReactNativeTwitterShare.convertUri(require("../images/space.jpg")))
+    t.sendTweet().then(e => {
+      if(e){
+        console.log("success")
+      }
+    }).catch(() => {
+      t.twitterControlAlert()
+    });
+  }
 
   return (
     <View style={styles.container}>
-      <Text>Result: {result}</Text>
+      <TouchableOpacity onPress={send}>
+        <Text>Send</Text>
+      </TouchableOpacity>
     </View>
   );
 }
