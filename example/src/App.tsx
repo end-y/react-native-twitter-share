@@ -4,15 +4,20 @@ import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
 import ReactNativeTwitterShare from 'react-native-twitter-share';
 
 export default function App() {
-  function send(){
-    let t = new ReactNativeTwitterShare("Hello World",ReactNativeTwitterShare.convertUri(require("../images/space.jpg")))
-    t.sendTweet().then(e => {
-      if(e){
-        console.log("success")
-      }
-    }).catch(() => {
-      t.twitterControlAlert()
-    });
+  function send() {
+    let t = new ReactNativeTwitterShare(
+      'Hello World',
+      ReactNativeTwitterShare.convertUri(require('../images/space.jpg'))
+    );
+    t.sendTweet()
+      .then((e) => {
+        if (e) {
+          console.log('success');
+        }
+      })
+      .catch(() => {
+        t.twitterControlAlert();
+      });
   }
 
   return (
