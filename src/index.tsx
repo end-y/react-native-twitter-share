@@ -28,28 +28,37 @@ export default class ReactNativeTwitterShare {
     this.url = url;
     this.hashtags = hashtags;
   }
-  sendTweet(): Promise<boolean | Error> {
-    return TwitterShare.SendTweet(this.msg, this.img || false);
+  sendTweet(base64: boolean): any {
+    this.img = this.img?.replace('file://', '');
+    if (this.hashtags !== '') {
+      this.msg += ' ' + this.hashtags;
+    }
+    if (this.url !== '') {
+      this.msg += ' ' + this.url;
+    }
+    return TwitterShare.SendTweet(this.msg, this.img || false, base64);
   }
   static convertUri(url: string): string {
     return asset(url).uri;
+  }
+  static async getAbsolutePath() {
+    return await TwitterShare.GetAbsolutePath();
   }
   twitterControlAlert() {
     Alert.alert('Not found Twitter App', 'Please make a choice', [
       {
         text: 'Go to twitter.com',
         onPress: async () => {
-          let isUrl = await Linking.canOpenURL(
-            `https://twitter.com/intent/tweet?text=${this.msg}&url=${
-              this.url || null
-            }&hashtags=${this.hashtags || null}`
-          );
+          let hashtag = this.hashtags ? `&hashtags=${this.hashtags}` : '';
+          let cleanHashtag = hashtag.replace(/#/g, '');
+          let url = this.url ? `&url=${this.url}` : '';
+          let lastURL = `https://twitter.com/intent/tweet?text=${
+            this.msg + cleanHashtag + url
+          }`;
+          let isUrl = await Linking.canOpenURL(encodeURI(lastURL));
+
           if (isUrl) {
-            Linking.openURL(
-              `https://twitter.com/intent/tweet?text=${this.msg}&url=${
-                this.url || null
-              }&hashtags=${this.hashtags || null}`
-            );
+            Linking.openURL(lastURL);
           }
         },
       },
